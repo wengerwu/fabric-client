@@ -1,0 +1,221 @@
+
+version: 1.0.0
+
+client:
+  organization: 51n
+  logging:
+    level: info
+  cryptoconfig:
+    path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config
+  credentialStore:
+    path: "/tmp/state-store"
+    cryptoStore:
+      path: /tmp/msp
+  BCCSP:
+    security:
+      enabled: true
+      default:
+        provider: "SW"
+      hashAlgorithm: "SHA2"
+      softVerify: true
+      level: 256
+
+  tlsCerts:
+    systemCertPool: false
+    client:
+      key:
+      cert:
+channels:
+  authenticchannel:
+    orderers:
+      - orderer.pbfchain.com
+
+    peers:
+      peer0.51n.pbfchain.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer1.51n.pbfchain.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    policies:
+      queryChannelConfig:
+        minResponses: 1
+        maxTargets: 1
+        retryOpts:
+          attempts: 5
+          initialBackoff: 500ms
+          maxBackoff: 5s
+          backoffFactor: 2.0
+      discovery:
+        maxTargets: 2
+        retryOpts:
+          attempts: 4
+          initialBackoff: 500ms
+          maxBackoff: 5s
+          backoffFactor: 2.0
+      eventService:
+        resolverStrategy: PreferOrg
+        balancer: Random
+        blockHeightLagThreshold: 5
+        reconnectBlockHeightLagThreshold: 8
+        peerMonitorPeriod: 6s
+
+
+
+organizations:
+
+  51n:
+    mspid: 51nMSP
+    cryptoPath:  /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/users/{username}@51n.pbfchain.com/msp
+    peers:
+      - peer0.51n.pbfchain.com
+      - peer1.51n.pbfchain.com
+      - peer2.51n.pbfchain.com
+      - peer3.51n.pbfchain.com
+    users:
+      Admin:
+        key:
+          path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/users/Admin@51n.pbfchain.com/msp/keystore/45229330b1966ace5058e19de77f67e4d6b1f6a4ffa7d42fa8934fbecbd7ed0e_sk
+        cert:
+          path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/users/Admin@51n.pbfchain.com/msp/signcerts/Admin@51n.pbfchain.com-cert.pem
+      User1:
+        key:
+          path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/users/User1@51n.pbfchain.com/msp/keystore/e6332f52b74df37894e8ef299f42100438ba86927127409b8b5a1c02e16c2fb7_sk
+        cert:
+          path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/users/User1@51n.pbfchain.com/msp/signcerts/User1@51n.pbfchain.com-cert.pem
+
+
+  ordererorg:
+    mspID: OrdererMSP
+    cryptoPath: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/ordererOrganizations/pbfchain.com/users/Admin@pbfchain.com/msp
+
+
+#
+# List of orderers to send transaction and channel create/update requests to. For the time
+# being only one orderer is needed. If more than one is defined, which one get used by the
+# SDK is implementation specific. Consult each SDK's documentation for its handling of orderers.
+#
+orderers:
+  orderer.pbfchain.com:
+    url: grpcs://39.108.3.127:7050
+    grpcOptions:
+      ssl-target-name-override: orderer.pbfchain.com
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+
+    tlsCACerts:
+      path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/ordererOrganizations/pbfchain.com/orderers/orderer.pbfchain.com/tls/server.crt
+
+peers:
+
+  peer0.51n.pbfchain.com:
+    url: grpcs://39.108.3.127:8051
+    grpcOptions:
+      ssl-target-name-override: peer0.51n.pbfchain.com
+      # These parameters should be set in coordination with the keepalive policy on the server,
+      # as incompatible settings can result in closing of connection.
+      # When duration of the 'keep-alive-time' is set to 0 or less the keep alive client parameters are disabled
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCACerts:
+      path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/peers/peer0.51n.pbfchain.com/tls/server.crt
+
+  peer1.51n.pbfchain.com:
+    url: grpcs://8.129.210.30:8051
+    grpcOptions:
+      ssl-target-name-override: peer1.51n.pbfchain.com
+      # These parameters should be set in coordination with the keepalive policy on the server,
+      # as incompatible settings can result in closing of connection.
+      # When duration of the 'keep-alive-time' is set to 0 or less the keep alive client parameters are disabled
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCACerts:
+      path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/peers/peer1.51n.pbfchain.com/tls/server.crt
+
+
+  peer2.51n.pbfchain.com:
+    url: grpcs://198.255.0.138:8051
+    grpcOptions:
+      ssl-target-name-override: peer2.51n.pbfchain.com
+      # These parameters should be set in coordination with the keepalive policy on the server,
+      # as incompatible settings can result in closing of connection.
+      # When duration of the 'keep-alive-time' is set to 0 or less the keep alive client parameters are disabled
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCACerts:
+      path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/peers/peer2.51n.pbfchain.com/tls/server.crt
+
+  peer3.51n.pbfchain.com:
+    url: grpcs://216.244.75.178:8051
+    grpcOptions:
+      ssl-target-name-override: peer3.51n.pbfchain.com
+      # These parameters should be set in coordination with the keepalive policy on the server,
+      # as incompatible settings can result in closing of connection.
+      # When duration of the 'keep-alive-time' is set to 0 or less the keep alive client parameters are disabled
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCACerts:
+      path: /opt/gopath/src/github.com/paybf.com/fabric-client/crypto-config/peerOrganizations/51n.pbfchain.com/peers/peer3.51n.pbfchain.com/tls/server.crt
+
+entityMatchers:
+  peer:
+    - pattern: (\w+).51n.pbfchain.com:(\d+)
+      urlSubstitutionExp: ${1}.51n.pbfchain.com:${2}
+      sslTargetOverrideUrlSubstitutionExp: ${1}.51n.pbfchain.com
+      mappedHost: peer0.51n.pbfchain.com
+
+    - pattern: (\w+)peer0.51n.pbfchain.com:(\d+)
+      urlSubstitutionExp: grpcs://peer0.51n.pbfchain.com:8051
+      sslTargetOverrideUrlSubstitutionExp: peer0.51n.pbfchain.com
+      mappedHost: peer0.51n.pbfchain.com
+
+    - pattern: (\w+)peer1.51n.pbfchain.com:(\d+)
+      urlSubstitutionExp: grpcs://peer1.51n.pbfchain.com:8051
+      sslTargetOverrideUrlSubstitutionExp: peer1.51n.pbfchain.com
+      mappedHost: peer1.51n.pbfchain.com
+
+    - pattern: (\w+)peer2.51n.pbfchain.com:(\d+)
+      urlSubstitutionExp: grpcs://peer2.51n.pbfchain.com:8051
+      sslTargetOverrideUrlSubstitutionExp: peer2.51n.pbfchain.com
+      mappedHost: peer2.51n.pbfchain.com
+
+    - pattern: (\w+)peer3.51n.pbfchain.com:(\d+)
+      urlSubstitutionExp: grpcs://peer3.51n.pbfchain.com:8051
+      sslTargetOverrideUrlSubstitutionExp: peer3.51n.pbfchain.com
+      mappedHost: peer3.51n.pbfchain.com
+
+  orderer:
+    - pattern: (\w+)orderer.pbfchain.com(\w+)
+      urlSubstitutionExp: grpcs://orderer.pbfchain.com:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.pbfchain.com
+      mappedHost: orderer.pbfchain.com
+

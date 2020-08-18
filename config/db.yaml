@@ -1,0 +1,24 @@
+master:
+  dialect: mysql
+  user: root
+  password: iamFengWu5523783
+  host: 8.129.210.30
+  port: 3306
+  database: blockinfo
+  charset: utf8
+  showSql: true
+  logLevel: debug
+  maxIdleConns: 10 # 连接池的空闲数大小
+  maxOpenConns: 10 # 最大打开连接数
+slave:
+  dialect: mysql
+  user: root
+  password: iamFengWu5523783
+  host: 8.129.210.30
+  port: 3306
+  database: blockinfo
+  charset: utf8
+  showSql: true
+  logLevel: debug
+  maxIdleConns: 10 # 连接池的空闲数大小
+  maxOpenConns: 10 # 最大打开连接数

@@ -1,0 +1,17 @@
+clients:
+  - paybf:
+    org:
+      orgName: PayBF
+      orgAdmin: Admin
+      ordererOrgName: orderer.pbfchain.com
+      orgMspID: PayBFMSP
+    sdkConfigPath: config/paybf-config.yaml
+    channelConfigPath: /opt/gopath/src/github.com/paybf.com/fabric-client/channel-artifacts/channel.tx
+  - 51n:
+    org:
+      orgName: 51n
+      orgAdmin: Admin
+      ordererOrgName: orderer.pbfchain.com
+      orgMspID: 51nMSP
+    sdkConfigPath: config/51n-config.yaml
+    channelConfigPath: /opt/gopath/src/github.com/paybf.com/fabric-client/channel-artifacts/channel.tx
